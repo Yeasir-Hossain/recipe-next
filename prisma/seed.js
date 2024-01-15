@@ -5,18 +5,18 @@ const prisma = new PrismaClient()
 const recipeData = [
   {
     title: 'Aloo Rice Delight',
-    description: 'A delicious dish combining Aloo (Potatoes) and Rice.',
-    ingredients: 'Aloo,Rice',
+    instructions: '1. Boil rice and set aside.\n2. In a pan, sauté chopped potatoes until golden brown.\n3. Mix the sautéed potatoes with the boiled rice.\n4. Serve hot and enjoy!',
+    ingredients: 'Rice,Potatoes'
   },
   {
     title: 'Chocolate Chip Cookies',
-    description: 'Classic chocolate chip cookies for a sweet treat.',
-    ingredients: 'Flour,Eggs,Sugar,Butter,Chocolate chips,Vanilla extract',
+    instructions: '1. Preheat the oven to 350°F.\n2. In a bowl, mix flour, eggs, sugar, butter, chocolate chips, and vanilla extract.\n3. Drop spoonfuls of dough onto a baking sheet.\n4. Bake for 10-12 minutes or until golden brown.\n5. Let cool and indulge!',
+    ingredients: 'Flour,Eggs,Sugar,Butter,Chocolate chips,Vanilla extract'
   },
   {
     title: 'Spicy Chicken Curry',
-    description: 'A flavorful chicken curry with spices and herbs.',
-    ingredients: 'Chicken,Onions,Tomatoes,Garlic,Ginger,Green chilies,Cilantro',
+    instructions: '1. In a pan, heat oil and sauté onions, garlic, and ginger.\n2. Add chicken, tomatoes, green chilies, and spices.\n3. Cook until chicken is done.\n4. Garnish with cilantro and serve with rice or bread.',
+    ingredients: 'Chicken,Onions,Tomatoes,Garlic,Ginger,Green chilies,Cilantro'
   },
 ];
 
