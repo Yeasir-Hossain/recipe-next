@@ -2,22 +2,6 @@
 import { useGlobalCtx } from '@/context/Global/GlobalProvider';
 import { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-
-// const shellMakeup = {
-//   position: 'fixed',
-//   zIndex: '100',
-//   top: '50%',
-//   left: '50%',
-//   transform: 'translate(-50%, -47.5%)',
-//   width: 'max-content',
-//   boxShadow: 'rgb(0, 0, 0) 0px 0px 8px',
-//   borderRadius: '10px',
-//   backgroundColor: 'white',
-//   overflowX: 'auto',
-//   maxHeight: '85vh',
-//   padding: '1rem',
-// };
-
 /**
  * This component injects the modal in the target element with createPortal function.
  * @param {String} modalKey The key of the modal jsx which is stored in modals state.

@@ -73,7 +73,7 @@ export default function InputWithBadge({
   return (
     <>
       {
-        label ? <p className="pb-2 font-normal text-sm">{label}</p>
+        label ? <p className="pb-1 font-normal text-sm">{label}</p>
           : ''
       }
 
