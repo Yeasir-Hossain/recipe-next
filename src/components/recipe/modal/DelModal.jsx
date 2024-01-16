@@ -1,6 +1,7 @@
 "use client"
 
 import { useGlobalCtx } from "@/context/Global/GlobalProvider";
+import { deleteResource } from "@/lib/cloudinary";
 import { deleteRecipe } from "@/lib/recipes";
 import { removeRecipe } from "@/reducers/recipeSlice";
 import { Trash, X } from "@phosphor-icons/react"
@@ -24,13 +25,17 @@ export default function DelModal({ id }) {
   const handleDelete = () => {
     deleteRecipe(id).then((res) => {
       if (res.id) {
+        if (res.resource) {
+          // behind the scene delete image from cloudinary
+          deleteResource(res.resource)
+        }
         dispatch(removeRecipe({ id }))
         closeModal('deleteRecipe')
       }
     }).catch((err) => { console.log(err); });
   }
   return (
-    <div className='md:w-[620px] w-[350px] rounded-lg overflow-hidden bg-white'>
+    <div className='md:w-[620px] w-[350px] rounded-md overflow-hidden bg-white'>
       <div className='md:pt-5 md:pb-6 py-3 md:px-5 px-3 flex justify-between items-center'>
         <h1 className='text-text_black font-semibold text-xl flex gap-1 items-center'>
           <Trash size={18} />

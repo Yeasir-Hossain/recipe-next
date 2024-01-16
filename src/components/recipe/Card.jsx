@@ -26,7 +26,7 @@ export default function Card({ id, title }) {
     openModal('addeditRecipe', <AddEditModal id={id} heading='Update' btnText='Update' />)
   }
   return (
-    <div className="flex justify-between items-center rounded-lg shadow-lg hover:shadow-xl transition-all duration-500 bg-white py-2 px-3 w-full">
+    <div className="flex justify-between items-center rounded-md shadow-lg hover:shadow-xl transition-all duration-500 bg-white py-2 px-3 w-full">
       <div>
         <p className="font-semibold text-lg">{title}</p>
       </div>

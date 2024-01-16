@@ -6,11 +6,13 @@ import Input from '@/components/shared/input/Input'
 import { useForm } from 'react-hook-form';
 import { X } from "@phosphor-icons/react"
 import Textarea from '@/components/shared/input/TextArea';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGlobalCtx } from '@/context/Global/GlobalProvider';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { addRecipe, patchRecipe } from '@/lib/recipes';
 import { createRecipe, updateRecipe } from '@/reducers/recipeSlice';
+import { uploadResource } from '@/lib/cloudinary';
+import Resource from '../Resource';
 
 /**
  * React component for adding or editing a recipe.
@@ -23,6 +25,7 @@ import { createRecipe, updateRecipe } from '@/reducers/recipeSlice';
 export default function AddEditModal({ heading = 'Create', btnText = 'Add', id = '' }) {
   const { closeModal } = useGlobalCtx();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const recipe = useSelector((state) => state.recipeStore.recipe?.find((s) => s.id === id) || {}, shallowEqual);
   const { register, handleSubmit, setValue, setError, clearErrors, formState: { errors } } = useForm();
 
@@ -32,31 +35,37 @@ export default function AddEditModal({ heading = 'Create', btnText = 'Add', id =
    * else triggers the add operation
    * after successful add/update the modal is closed.
    */
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!data?.ingredients.length) {
       setError("ingredients", { message: "This field is required" });
       return;
     }
-    if (!data.resource.length > 0) {
-      delete data.resource;
-    }
+
+    // Convert ingredients array to a comma-separated string
     data.ingredients = data.ingredients.join(',');
 
-    // for add or update
-    const recipePromise = id === '' || !id ? addRecipe(data) : patchRecipe(id, data);
+    try {
+      setLoading(true);
+      if (!data.resource?.length) {
+        delete data.resource;
+      } else {
+        data.resource = await uploadResource(data.resource);
+      }
 
-    recipePromise
-      .then((recipe) => {
-        if (recipe.id) {
-          const action = id === '' || !id ? createRecipe : updateRecipe;
-          dispatch(action(recipe));
-          closeModal('addeditRecipe');
-        }
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        clearErrors();
-      });
+      // Add or update recipe based on the presence of an ID
+      const recipe = id === '' || !id ? await addRecipe(data) : await patchRecipe(id, data);
+
+      if (recipe.id) {
+        const action = id === '' || !id ? createRecipe : updateRecipe;
+        dispatch(action(recipe));
+        closeModal('addeditRecipe');
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      clearErrors();
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -65,8 +74,9 @@ export default function AddEditModal({ heading = 'Create', btnText = 'Add', id =
       setValue('instructions', recipe.instructions);
     }
   }, [id]);
+
   return (
-    <div className='md:w-[620px] w-[350px] rounded-lg bg-white md:pt-5 md:pb-6 py-3 border-b border-barbg md:px-5 px-3 '>
+    <div className='md:w-[620px] w-[350px] rounded-md bg-white md:pt-5 md:pb-6 py-3 border-b border-barbg md:px-5 px-3 '>
       <div className='flex justify-between mb-5'>
         <h1 className='text-blue font-semibold text-xl'>{heading} Recipe</h1>
         <button onClick={(e) => {
@@ -111,11 +121,22 @@ export default function AddEditModal({ heading = 'Create', btnText = 'Add', id =
           register={() =>
             register("instructions", {
               required: 'This field is required',
+              minLength: {
+                value: 50,
+                message: "Minimum words 50"
+              }
             })
           }
           id='instructions'
           errors={errors["instructions"]}
         />
+        {
+          id && recipe.resource &&
+          <div className='pb-2'>
+            <p className='text-xs lg:text-sm pb-1'>Current Reource:</p>
+            <Resource url={recipe.resource} className='max-w-96' />
+          </div>
+        }
         <Input type={'file'}
           name="resource"
           setValue={setValue}
@@ -128,7 +149,7 @@ export default function AddEditModal({ heading = 'Create', btnText = 'Add', id =
         />
         <div className='w-max ml-auto p-4'>
           <button onClick={() => closeModal('addeditRecipe')} className=' w-24 py-2 bg-white rounded mr-2 border border-barbg'>Cancel</button>
-          <button type='submit' className=' w-24 py-2 bg-blue-500 text-white rounded'>{btnText}</button>
+          <button type='submit' onClick={() => clearErrors()} disabled={loading} className=' w-24 py-2 bg-blue-500 text-white rounded'>{loading ? 'Uploading' : btnText}</button>
         </div>
       </form>
     </div>

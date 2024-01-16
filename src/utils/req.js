@@ -12,7 +12,7 @@ import axios from "axios";
  * @param {object} options.rest - Additional options for the Axios request.
  * @returns {Promise} - A promise that resolves with the data from the HTTP response or logs an error.
  */
-export default async function req({ method = 'GET', uri, body = '{}', ...rest }) {
+export default async function req({ method = 'GET', uri, body = '{}', withCredentials = true, ...rest }) {
   try {
     // Construct the complete URL for the request
     let url = uri.startsWith('https://') ? uri : `${process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000/api'}/${uri}`;
@@ -20,7 +20,7 @@ export default async function req({ method = 'GET', uri, body = '{}', ...rest })
     // Configure the payload for the Axios request
     var payload = {
       method,
-      withCredentials: true,
+      withCredentials,
       url,
       data: body,
       ...rest

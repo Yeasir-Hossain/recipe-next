@@ -23,7 +23,7 @@ npm run build
 ### Start the production server
 
 ```bash
-npm start
+npm run start
 ```
 
 ### Seed the database with initial data
@@ -32,13 +32,8 @@ npm start
 npm run seed
 ```
 
-### Run Prisma migrations and open Prisma Studio
 
-```bash
-npm run prisma
-```
-
-## Project Workflow
+## How to run
 
 ### Install project dependencies
 
@@ -46,7 +41,13 @@ npm run prisma
 npm install
 ```
 
-### Start the development server
+### Run Prisma migrations and open Prisma Studio
+
+```bash
+npm run prisma
+```
+
+### Start the development server in another cmd
 
 ```bash
 npm run dev

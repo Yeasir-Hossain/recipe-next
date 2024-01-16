@@ -56,9 +56,9 @@ export default async function handler(req, res) {
                 // Handles unsupported HTTP methods with a 400 Bad Request status
                 return res.status(400).send({ message: 'Bad Request' });
         }
-    } catch (error) {
+    } catch (err) {
         // Logs any internal errors and responds with a 500 Internal Server Error status
-        console.log(error);
+        console.log(err);
         return res.status(500).send({ message: 'Internal Server Error' });
     }
 }

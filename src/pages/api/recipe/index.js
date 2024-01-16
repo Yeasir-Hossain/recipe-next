@@ -30,7 +30,6 @@ export default async function handler(req, res) {
         return res.status(200).send(recipePost);
 
       case 'GET':
-        console.log();
         // Fetches all recipes using a GET request
         const recipeGetAll = await prisma.recipe.findMany({});
         // Responds with an array of recipe data
@@ -40,9 +39,9 @@ export default async function handler(req, res) {
         // Handles unsupported HTTP methods with a 400 Bad Request status
         return res.status(400).send({ message: 'Bad Request' });
     }
-  } catch (error) {
+  } catch (err) {
     // Logs any internal errors and responds with a 500 Internal Server Error status
-    console.log(error);
+    console.log(err);
     return res.status(500).send({ message: 'Internal Server Error' });
   }
 }
